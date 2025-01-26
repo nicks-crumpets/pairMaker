@@ -1,10 +1,16 @@
 # Used for random number generating for order (CSV not used yet, will be later)
 import random, csv
-import sys
-import time as t
 
 # list of names
-names = ["name1", "name2", "name3", "name4", "name5", "name6"]
+f = open("names.csv", "r")
+
+# reading the file
+data = f.read()
+
+# replacing end of line('/n') with ' ' and
+# splitting the text it further when '.' is seen.
+names = data.split("\n")
+
 
 while True:
     repeatsFound = 0
@@ -29,11 +35,27 @@ while True:
 
     # If no repeats were found, tell the user and end the program
     elif repeatsFound == 0:
-        print(*names1)
-        print(*names2)
+
+        # for each position in both of the list, print both names
+        for valA, valB in zip(names1, names2):
+
+            # Opens in write mode to wipe the file from previous uses (if any) and closes the file
+            open("results.csv", "w").close()
+
+            # Opens the file, using append, setting newline to blank ('') to stop empty rows
+            with open("results.csv", "a", newline='') as f:
+                writer = csv.writer(f)
+
+                # Cell 1 has the first name, cell 2 has an arrow, cell 3 has the second name
+                writer.writerow([valA,'->', valB])
+
+            print(valA, "->", valB)
+
+        # Just here so the user knows it's done, and for my satisfaction
         print("Success!")
 
-        exitPrompt = input()
+        # A simple way to make any key exit the program
+        exitPrompt = input("Press enter to exit")
         if exitPrompt == "":
             exit()
         else:
